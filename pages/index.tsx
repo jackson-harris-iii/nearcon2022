@@ -6,6 +6,7 @@ import Card from '../components/Card'
 import Link from 'next/link'
 import { Button, Input } from '@nextui-org/react'
 import { useWallet } from '../services/providers/MintbaseWalletContext'
+import { useStore } from '../utils/store'
 import { API, Chain, Network, Wallet } from 'mintbase'
 
 const links = [
@@ -36,6 +37,8 @@ const Home = () => {
   const { wallet, isConnected, details } = useWallet()
   const [storeName, setStoreName] = useState('')
   const [storeSymbol, setStoreSymbol] = useState('')
+  const store = useStore((state) => state.store)
+  const setStore = useStore((state) => state.setStore)
 
   const deployStore = async () => {
     const storeDetails = {
@@ -68,10 +71,30 @@ const Home = () => {
         wallet?.activeAccount?.accountId
       )
       console.log('here is the api call result', result.data.store)
-      result?.data?.store.forEach((store) => {})
+
+      let storeArr = result?.data?.store
+      const walletAstore = checkForAlignmintStore(storeArr)
+      if (walletAstore?.store !== false) {
+        setStoreFound(walletAstore)
+      }
+      // result?.data?.store.forEach((store) => {})
     } catch (err) {
       console.log(err)
     }
+  }
+
+  const checkForAlignmintStore = (stores: [any]) => {
+    let found = { store: false }
+
+    stores.forEach((store) => {
+      let nameSplit = store.id.split('.')
+      let firstLast9 = nameSplit[0].substr(nameSplit[0].length - 9)
+      if (firstLast9.toLower() === 'alignmint') {
+        found = { store }
+      }
+    })
+
+    return found
   }
 
   useEffect(() => {

@@ -1,4 +1,11 @@
-import { NearBindgen, near, call, view, initialize, UnorderedMap } from 'near-sdk-js'
+import {
+  NearBindgen,
+  near,
+  call,
+  view,
+  initialize,
+  UnorderedMap,
+} from 'near-sdk-js'
 import { Project, STORAGE_COST } from './model'
 
 export function assert(statement, message) {
@@ -9,13 +16,11 @@ export function assert(statement, message) {
 
 @NearBindgen({})
 class AlignmintContract {
-  projects: UnorderedMap = new UnorderedMap('map-uid-1');
+  projects: UnorderedMap = new UnorderedMap('map-uid-1')
 
-
-  @call({payableFunction: true})
-  createProject({storeId}={storeId:String}) {
-
-    let owner = near.predecessorAccountId();
+  @call({ payableFunction: true })
+  createProject({ storeId } = { storeId: String }) {
+    let owner = near.predecessorAccountId()
     let ownerProjects = this.projects.get(owner)
 
     let list = []
@@ -25,16 +30,19 @@ class AlignmintContract {
 
     const update = list.push(storeId)
 
-
     this.projects.set(owner, JSON.stringify(update))
-    
+
     // Return the total number of projects created so far
     return Object.keys(this.projects).length
   }
-  
 
   @view({})
-  get_projects(){ return this.projects }
+  get_projects() {
+    return this.projects
+  }
 
-  // @view({})
-  // number_of_projects() { return Object.keys(this.projects).length }
+  @view({})
+  number_of_projects() {
+    return Object.keys(this.projects).length
+  }
+}

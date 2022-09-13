@@ -8,12 +8,6 @@ import {
 } from 'near-sdk-js'
 import { Project, STORAGE_COST } from './model'
 
-export function assert(statement, message) {
-  if (!statement) {
-    throw Error(`Assertion failed: ${message}`)
-  }
-}
-
 @NearBindgen({})
 class AlignmintContract {
   projects: UnorderedMap = new UnorderedMap('map-uid-1')

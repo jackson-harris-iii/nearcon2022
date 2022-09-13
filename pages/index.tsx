@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Hero from '../components/Hero'
 import Container from '../components/Layout/Container'
@@ -6,6 +6,7 @@ import Card from '../components/Card'
 import Link from 'next/link'
 import { Button, Input } from '@nextui-org/react'
 import { useWallet } from '../services/providers/MintbaseWalletContext'
+import { API, Chain, Network, Wallet } from 'mintbase'
 
 const links = [
   {
@@ -43,15 +44,63 @@ const Home = () => {
     }
     console.log('storeDetails', storeDetails)
     try {
-      wallet.deployStore(storeDetails.storeId, storeDetails.symbol)
+      const result = wallet.deployStore(
+        storeDetails.storeId,
+        storeDetails.symbol
+      )
+      console.log('here are the new store details', result)
     } catch (err) {
       console.log('deploy store err', err)
     }
   }
+
+  const getAccount = async () => {
+    try {
+      //@ts-ignore
+      // const mbAPI = await new API({
+      //   chain: 'near' as Chain,
+      //   networkName: process.env.NEXT_PUBLIC_MINTBASEJS_NETWORK as Network,
+      //   apiBaseUrl: process.env.NEXT_PUBLIC_MINTBASEJS_API_URL,
+      //   apiKey: process.env.NEXT_PUBLIC_MINTBASEJS_API_KEY,
+      // })
+      // console.log('here is the api', mbAPI)
+      const result = await wallet.api.fetchAccount(
+        wallet?.activeAccount?.accountId
+      )
+      console.log('here is the api call result', result.data.store)
+      result?.data?.store.forEach((store) => {})
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    })
+    // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+    //@ts-ignore
+    let value = params?.transactionHashes // "some_value"
+    console.log('these be the transactionHashes', value)
+    //@ts-ignore
+    // const mbAPI = new API()
+    // mbAPI.fetchAccount(wallet.)
+    console.log('here is the wallet', wallet)
+    console.log(
+      'here is the wallet active account',
+      wallet?.activeAccount?.accountId
+    )
+
+    if (wallet?.activeAccount?.accountId !== undefined) {
+      getAccount()
+    }
+    // wallet.fetchTransactionResult()
+  }, [wallet])
+
   return (
     <>
       <Head>
-        <title>Mintbase Engineering</title>
+        {/* <title>Mintbase Engineering</title> */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Hero />

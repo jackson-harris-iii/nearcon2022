@@ -30,8 +30,9 @@ const Minter = () => {
   useEffect(() => {
     if (!isConnected) return
 
+    //@ts-ignore
     fetchStores()
-  }, [isConnected])
+  }, [isConnected, fetchStores])
 
   const {
     register,

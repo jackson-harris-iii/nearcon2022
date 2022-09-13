@@ -36,5 +36,5 @@ class AlignmintContract {
   @view({})
   get_projects(){ return this.projects }
 
-  @view({})
-  number_of_projects() { return Object.keys(this.projects).length }
+  // @view({})
+  // number_of_projects() { return Object.keys(this.projects).length }

@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import Hero from '../components/Hero'
 import Container from '../components/Layout/Container'
 import Card from '../components/Card'
 import Link from 'next/link'
+import { Button, Input } from '@nextui-org/react'
+import { useWallet } from '../services/providers/MintbaseWalletContext'
 
 const links = [
   {
@@ -29,6 +32,22 @@ const links = [
 ]
 
 const Home = () => {
+  const { wallet, isConnected, details } = useWallet()
+  const [storeName, setStoreName] = useState('')
+  const [storeSymbol, setStoreSymbol] = useState('')
+
+  const deployStore = async () => {
+    const storeDetails = {
+      storeId: storeName,
+      symbol: storeSymbol,
+    }
+    console.log('storeDetails', storeDetails)
+    try {
+      wallet.deployStore(storeDetails.storeId, storeDetails.symbol)
+    } catch (err) {
+      console.log('deploy store err', err)
+    }
+  }
   return (
     <>
       <Head>
@@ -39,7 +58,7 @@ const Home = () => {
 
       <Container className="flex justify-center my-24">
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 md:gap-12">
-          {links.map((link, index) => (
+          {/* {links.map((link, index) => (
             <Link href={link.href} key={'link' + index} passHref>
               <a>
                 <div className="flex w-auto max-w-64 h-full">
@@ -47,7 +66,20 @@ const Home = () => {
                 </div>
               </a>
             </Link>
-          ))}
+          ))} */}
+          {/* @ts-ignore */}
+          <Input
+            bordered
+            labelPlaceholder="Store Name"
+            onChange={(e) => setStoreName(e.target.value)}
+          ></Input>
+          {/* @ts-ignore */}
+          <Input
+            bordered
+            labelPlaceholder="Store Symbol"
+            onChange={(e) => setStoreSymbol(e.target.value)}
+          ></Input>
+          <Button onClick={() => deployStore()}>Deploy Store</Button>
         </div>
       </Container>
     </>

@@ -37,8 +37,10 @@ const Home = () => {
   const { wallet, isConnected, details } = useWallet()
   const [storeName, setStoreName] = useState('')
   const [storeSymbol, setStoreSymbol] = useState('')
-  const store = useStore((state) => state.store)
-  const setStore = useStore((state) => state.setStore)
+  //@ts-ignore
+  const aStore = useStore((state) => state.aStore)
+  //@ts-ignore
+  const setAstore = useStore((state) => state.setAstore)
 
   const deployStore = async () => {
     const storeDetails = {
@@ -75,7 +77,7 @@ const Home = () => {
       let storeArr = result?.data?.store
       const walletAstore = checkForAlignmintStore(storeArr)
       if (walletAstore?.store !== false) {
-        setStoreFound(walletAstore)
+        setAstore(walletAstore)
       }
       // result?.data?.store.forEach((store) => {})
     } catch (err) {

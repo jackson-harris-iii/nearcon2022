@@ -1,16 +1,21 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 
+type aStoreState = {
+  aStore: any | null
+  setAstore: (storeUpdate: any) => void
+}
+
 const useStore = create(
   persist(
     (set, get) => ({
       //vars
-      store: null,
+      aStore: null,
 
       //methods
-      setStore: async (storeUpdate) => {
+      setAstore: async (storeUpdate) => {
         set((state) => ({
-          store: storeUpdate,
+          aStore: storeUpdate,
         }))
       },
     }),

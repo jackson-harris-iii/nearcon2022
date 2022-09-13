@@ -6,7 +6,7 @@ import Card from '../components/Card'
 import Link from 'next/link'
 import { Button, Input } from '@nextui-org/react'
 import { useWallet } from '../services/providers/MintbaseWalletContext'
-import { useStore } from '../utils/store'
+import useStore from '../utils/store'
 import { API, Chain, Network, Wallet } from 'mintbase'
 
 const links = [

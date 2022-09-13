@@ -77,6 +77,7 @@ const Home = () => {
       let storeArr = result?.data?.store
       const walletAstore = checkForAlignmintStore(storeArr)
       if (walletAstore?.store !== false) {
+        console.log('walletAstore', walletAstore)
         setAstore(walletAstore)
       }
       // result?.data?.store.forEach((store) => {})
@@ -86,12 +87,16 @@ const Home = () => {
   }
 
   const checkForAlignmintStore = (stores: [any]) => {
+    console.log('here is storeArr', stores)
     let found = { store: false }
 
     stores.forEach((store) => {
       let nameSplit = store.id.split('.')
-      let firstLast9 = nameSplit[0].substr(nameSplit[0].length - 9)
-      if (firstLast9.toLower() === 'alignmint') {
+      let isAli = nameSplit[0].includes('alignmint')
+      // console.log('isAli', isAli)
+      // console.log('nameSplit', nameSplit)
+      if (isAli === true) {
+        console.log('match found', store)
         found = { store }
       }
     })

@@ -13,6 +13,7 @@ import {
   Row,
   Card,
   Text,
+  Label,
 } from '@nextui-org/react'
 import { useWallet } from '../services/providers/MintbaseWalletContext'
 import useStore from '../utils/store'
@@ -41,6 +42,17 @@ const links = [
     description: 'The first step for an on-chain adventure.',
   },
 ]
+
+const testUpdate = {
+  title: '4Ocean Beach Cleanup #1',
+  entryKey: 'razomalignmint2.mintspace2.testnet_4Ocean Beach Cleanup #1',
+  entry: {
+    display_type: 'updateFields',
+    trait_type: 'updateFields',
+    value: 'Beach Clean',
+    media: 'https://i.ibb.co/SXPM4r5/beach1after.jpg',
+  },
+}
 
 const Home = () => {
   const { wallet, isConnected, details } = useWallet()
@@ -84,17 +96,12 @@ const Home = () => {
       )
       console.log('what is this result', result)
 
-      // const { data, error } = await wallet.api.fetchTokens()
-
-      // console.log('data tokens what?', data)
-      // console.log('here are the NFTS!!!', data)
       const results = result.data.token.map(async (nft) => {
         try {
           const info = await wallet.api.fetchTokenById(nft.id)
           const res2 = await fetch(info.data.thing.metaId)
           let thingInfo = await res2.json()
-          // console.log('here is the info', info)
-          // console.log('thing thingInfo', thingInfo)
+
           return thingInfo
         } catch (err) {
           console.log('results', err)
@@ -206,6 +213,16 @@ const Home = () => {
 
   const val = { entryKey: 'test1', entry: '{metdata1: value1}' }
 
+  const json = {
+    entryKey: 'razomalignmint2.mintspace2.testnet_4Ocean Beach Cleanup #1',
+    entry: {
+      display_type: 'updateFields',
+      trait_type: 'updateFields',
+      value: 'Beach Clean',
+      media: 'https://i.ibb.co/SXPM4r5/beach1after.jpg',
+    },
+  }
+
   return (
     <>
       <Head>
@@ -216,33 +233,14 @@ const Home = () => {
 
       <Container className="flex justify-center my-24">
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 md:gap-12">
-          {/* {links.map((link, index) => (
-            <Link href={link.href} key={'link' + index} passHref>
-              <a>
-                <div className="flex w-auto max-w-64 h-full">
-                  <Card title={link.title} description={link.description} />
-                </div>
-              </a>
-            </Link>
-          ))} */}
-          {/* @ts-ignore */}
-          {/* <Input
-            bordered
-            labelPlaceholder="Store Name"
-            onChange={(e) => setStoreName(e.target.value)}
-          ></Input> */}
-          {/* @ts-ignore */}
-          {/* <Input
-            bordered
-            labelPlaceholder="Store Symbol"
-            onChange={(e) => setStoreSymbol(e.target.value)}
-          ></Input>
-          <Button onClick={() => deployStore()}>Deploy Store</Button> */}
           {nfts.length > 0 ? (
             nfts.map((nft, index) => {
+              if (nft.title === testUpdate.title) {
+                nft.media = testUpdate.entry.media
+              }
               console.log('here is the NFT', nft)
               return (
-                <>
+                <div>
                   {/*@ts-ignore */}
                   <Grid.Container gap={2} justify="flex-start">
                     <Grid xs={12} sm={12} key={index}>
@@ -252,10 +250,10 @@ const Home = () => {
                         <Card.Body css={{ p: 0 }}>
                           {/*@ts-ignore */}
                           <Card.Image
-                            src={`https://arweave.net/${nft.media_hash}`}
+                            src={nft.media}
                             objectFit="cover"
                             width="100%"
-                            height={140}
+                            // height={140}
                             alt={nft.title}
                           />
                           {/*@ts-ignore */}
@@ -268,24 +266,21 @@ const Home = () => {
                             align="center"
                           >
                             {/*@ts-ignore */}
-                            <Text b>{nft.title}</Text>
-                            {/*@ts-ignore */}
-                            <Text
-                              css={{
-                                color: '$accents7',
-                                fontWeight: '$semibold',
-                                fontSize: '$sm',
-                              }}
-                            >
-                              {nft.price}
+                            <Text h2 size={22} weight="bold">
+                              {nft.title}
                             </Text>
+                            {/*@ts-ignore */}
+                            <Row>
+                              <Text weight="bold">Description:</Text>
+                            </Row>
+                            <p>{nft.description}</p>
                           </Row>
                           {/*@ts-ignore */}
                         </Card.Footer>
                       </Card>
                     </Grid>
                   </Grid.Container>
-                </>
+                </div>
               )
             })
           ) : (

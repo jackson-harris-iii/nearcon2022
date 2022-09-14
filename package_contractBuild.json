@@ -1,0 +1,50 @@
+{
+  "name": "create-next-mintbase-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "buildContract": "./contract/build.sh"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.21",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-decorators": "^7.19.0",
+    "@babel/preset-env": "^7.19.0",
+    "@nextui-org/react": "^1.0.0-beta.10",
+    "apollo-boost": "^0.4.9",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
+    "deepmerge": "^4.2.2",
+    "lodash": "^4.17.21",
+    "mintbase": "0.5.0",
+    "mintbase-ui": "^0.1.2",
+    "near-sdk-js": "^0.5.0",
+    "next": "^12.1.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-hook-form": "^7.13.0",
+    "react-jinke-music-player": "^4.24.1",
+    "subscriptions-transport-ws": "^0.9.19",
+    "typedoc": "^0.23.14",
+    "zustand": "^4.1.1"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.18.9",
+    "@types/lodash": "^4.14.171",
+    "@types/react": "17.0.14",
+    "autoprefixer": "^10.4.7",
+    "eslint": "7.30.0",
+    "eslint-config-next": "11.0.1",
+    "postcss": "^8.4.13",
+    "tailwindcss": "^3.0.24",
+    "typescript": "4.3.5"
+  },
+  "type": "module"
+}

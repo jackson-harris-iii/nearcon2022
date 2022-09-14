@@ -1,3 +1,4 @@
+import * as nearAPI from 'near-api-js'
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Hero from '../components/Hero'
@@ -68,10 +69,31 @@ const Home = () => {
       //   apiBaseUrl: process.env.NEXT_PUBLIC_MINTBASEJS_API_URL,
       //   apiKey: process.env.NEXT_PUBLIC_MINTBASEJS_API_KEY,
       // })
-      // console.log('here is the api', mbAPI)
+      console.log('here is the api', wallet)
       const result = await wallet.api.fetchAccount(
         wallet?.activeAccount?.accountId
       )
+      console.log('what is this result', result)
+
+      // const { data, error } = await wallet.api.fetchTokens()
+
+      // console.log('data tokens what?', data)
+      // console.log('here are the NFTS!!!', data)
+      const results = result.data.token.map(async (nft) => {
+        try {
+          const info = await wallet.api.fetchTokenById(nft.id)
+          const res2 = await fetch(info.data.thing.metaId)
+          let thingInfo = await res2.json()
+          // console.log('here is the info', info)
+          console.log('thing thingInfo', thingInfo)
+        } catch (err) {
+          console.log('results', err)
+        }
+        const done = await Promise.all(results)
+        console.log('this might be magic', done)
+        // console.log('thing id', info.data.thing.metaId)
+      })
+
       console.log('here is the api call result', result.data.store)
 
       let storeArr = result?.data?.store
@@ -80,9 +102,50 @@ const Home = () => {
         console.log('walletAstore', walletAstore)
         setAstore(walletAstore)
       }
+
       // result?.data?.store.forEach((store) => {})
     } catch (err) {
       console.log(err)
+    }
+  }
+
+  const contractTest = async () => {
+    try {
+      const { connect, keyStores, WalletConnection } = nearAPI
+
+      const connectionConfig = {
+        networkId: 'testnet',
+        keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+        nodeUrl: 'https://rpc.testnet.near.org',
+        walletUrl: 'https://wallet.testnet.near.org',
+        helperUrl: 'https://helper.testnet.near.org',
+        explorerUrl: 'https://explorer.testnet.near.org',
+      }
+
+      //@ts-ignore
+      const nearConnection = await connect(connectionConfig)
+
+      const account = await nearConnection.account('jh-alignmint.testnet')
+
+      const contract = new nearAPI.Contract(
+        account, // the account object that is connecting
+        'jh-alignmint.testnet',
+        {
+          // name of contract you're connecting to
+          viewMethods: ['get_proxyMap', 'number_of_proxies'], // view methods do not change state but usually return a value
+          changeMethods: ['updateProxyMapEntry'], // change methods modify state
+          //@ts-ignore
+          sender: account, // account object to initialize and sign transactions.
+        }
+      )
+      console.log('here is the alignmint contract', contract)
+      //@ts-ignore
+      const test49 = await contract.get_proxyMap({ id: 'test69' })
+
+      console.log('test49', JSON.parse(test49))
+      // wallet.fetchTransactionResult()
+    } catch (err) {
+      console.log('contract test error', err)
     }
   }
 
@@ -124,9 +187,12 @@ const Home = () => {
 
     if (wallet?.activeAccount?.accountId !== undefined) {
       getAccount()
+      contractTest()
     }
-    // wallet.fetchTransactionResult()
+    contractTest()
   }, [wallet])
+
+  const val = { entryKey: 'test1', entry: '{metdata1: value1}' }
 
   return (
     <>

@@ -3,9 +3,17 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Hero from '../components/Hero'
 import Container from '../components/Layout/Container'
-import Card from '../components/Card'
+// import Card from '../components/Card'
 import Link from 'next/link'
-import { Button, Input } from '@nextui-org/react'
+import {
+  Button,
+  Grid,
+  Input,
+  Loading,
+  Row,
+  Card,
+  Text,
+} from '@nextui-org/react'
 import { useWallet } from '../services/providers/MintbaseWalletContext'
 import useStore from '../utils/store'
 import { API, Chain, Network, Wallet } from 'mintbase'
@@ -42,6 +50,7 @@ const Home = () => {
   const aStore = useStore((state) => state.aStore)
   //@ts-ignore
   const setAstore = useStore((state) => state.setAstore)
+  const [nfts, setNFTs] = useState([])
 
   const deployStore = async () => {
     const storeDetails = {
@@ -85,14 +94,17 @@ const Home = () => {
           const res2 = await fetch(info.data.thing.metaId)
           let thingInfo = await res2.json()
           // console.log('here is the info', info)
-          console.log('thing thingInfo', thingInfo)
+          // console.log('thing thingInfo', thingInfo)
+          return thingInfo
         } catch (err) {
           console.log('results', err)
         }
-        const done = await Promise.all(results)
-        console.log('this might be magic', done)
         // console.log('thing id', info.data.thing.metaId)
       })
+      const done = await Promise.all(results)
+      console.log('this might be magic', done)
+      //@ts-ignore
+      await setNFTs(done)
 
       console.log('here is the api call result', result.data.store)
 
@@ -214,18 +226,71 @@ const Home = () => {
             </Link>
           ))} */}
           {/* @ts-ignore */}
-          <Input
+          {/* <Input
             bordered
             labelPlaceholder="Store Name"
             onChange={(e) => setStoreName(e.target.value)}
-          ></Input>
+          ></Input> */}
           {/* @ts-ignore */}
-          <Input
+          {/* <Input
             bordered
             labelPlaceholder="Store Symbol"
             onChange={(e) => setStoreSymbol(e.target.value)}
           ></Input>
-          <Button onClick={() => deployStore()}>Deploy Store</Button>
+          <Button onClick={() => deployStore()}>Deploy Store</Button> */}
+          {nfts.length > 0 ? (
+            nfts.map((nft, index) => {
+              console.log('here is the NFT', nft)
+              return (
+                <>
+                  {/*@ts-ignore */}
+                  <Grid.Container gap={2} justify="flex-start">
+                    <Grid xs={12} sm={12} key={index}>
+                      {/*@ts-ignore */}
+                      <Card>
+                        {/*@ts-ignore */}
+                        <Card.Body css={{ p: 0 }}>
+                          {/*@ts-ignore */}
+                          <Card.Image
+                            src={`https://arweave.net/${nft.media_hash}`}
+                            objectFit="cover"
+                            width="100%"
+                            height={140}
+                            alt={nft.title}
+                          />
+                          {/*@ts-ignore */}
+                        </Card.Body>
+                        {/*@ts-ignore */}
+                        <Card.Footer css={{ justifyItems: 'flex-start' }}>
+                          <Row
+                            wrap="wrap"
+                            justify="space-between"
+                            align="center"
+                          >
+                            {/*@ts-ignore */}
+                            <Text b>{nft.title}</Text>
+                            {/*@ts-ignore */}
+                            <Text
+                              css={{
+                                color: '$accents7',
+                                fontWeight: '$semibold',
+                                fontSize: '$sm',
+                              }}
+                            >
+                              {nft.price}
+                            </Text>
+                          </Row>
+                          {/*@ts-ignore */}
+                        </Card.Footer>
+                      </Card>
+                    </Grid>
+                  </Grid.Container>
+                </>
+              )
+            })
+          ) : (
+            <Loading />
+          )}
         </div>
       </Container>
     </>

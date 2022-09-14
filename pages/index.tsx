@@ -211,18 +211,6 @@ const Home = () => {
     contractTest()
   }, [wallet])
 
-  const val = { entryKey: 'test1', entry: '{metdata1: value1}' }
-
-  const json = {
-    entryKey: 'razomalignmint2.mintspace2.testnet_4Ocean Beach Cleanup #1',
-    entry: {
-      display_type: 'updateFields',
-      trait_type: 'updateFields',
-      value: 'Beach Clean',
-      media: 'https://i.ibb.co/SXPM4r5/beach1after.jpg',
-    },
-  }
-
   return (
     <>
       <Head>
@@ -240,7 +228,7 @@ const Home = () => {
               }
               console.log('here is the NFT', nft)
               return (
-                <div>
+                <div key={index}>
                   {/*@ts-ignore */}
                   <Grid.Container gap={2} justify="flex-start">
                     <Grid xs={12} sm={12} key={index}>
